@@ -9,17 +9,16 @@
 int Data[DATA_SIZE];
 int Hash[HASH_BUCKET_SIZE];
 
-int hash(){
+void hash(){
 
     Data[0] = rand() % 8;
-    for(int i = 0; i < DATA_SIZE; i++){
-        Data[i] = Data[i-1] + rand() % 10 + 1;
-        printf("%d,", Data[i]);
+    for(int i = 1; i < DATA_SIZE; i++){
+        Data[i+1] = Data[i] + rand() % 10 + 1;
+        // printf("%d,", Data[i]);
     }
 
     for(int i = 0; i < HASH_BUCKET_SIZE; i++){
         Hash[i] = -1;
-        //printf("%d,", Hash[i]);
     }
 
     for(int i = 0; i < DATA_SIZE; i++){
@@ -28,19 +27,19 @@ int hash(){
         
         while(Hash[ad] != -1){
             ad += Delta;
-            if(ad >=HASH_BUCKET_SIZE){
+            if(ad >= HASH_BUCKET_SIZE){
                 ad -= HASH_BUCKET_SIZE;
             }
         }
         Hash[ad] = key;
     }
 
-    for(int i = 0; i < HASH_BUCKET_SIZE; i++){
-        printf("%d\n", Hash[i]);
-    }
+    // for(int i = 0; i < HASH_BUCKET_SIZE; i++){
+    //     printf("%d\n", Hash[i]);
+    // }
 }
 
-int hash_search(int key){
+void hash_search(int key){
 
     int ad = key % HASH_BUCKET_SIZE;
     int count = 0;
@@ -48,29 +47,29 @@ int hash_search(int key){
     while(true){
         count++;
         if(Hash[ad] == -1){
-            //printf("%d is not found", key);
+            // printf("%d is not found", key);
             break;
         }
         else if(Hash[ad] == key){
             printf("%d is found (count : %d)\n", Hash[ad], count);
             break;
         }
-        else ad += Delta;
-        if(ad >= HASH_BUCKET_SIZE) ad -= HASH_BUCKET_SIZE;
-
+        else {
+            ad += Delta;
+            if(ad >= HASH_BUCKET_SIZE) 
+                ad -= HASH_BUCKET_SIZE;
+        }
     }
-
-    return 0;
-
 }
 
 int main(){
-    int hs = hash();
+    hash();
 
     for(int i = 0; i < DATA_SIZE; i++){
-
         int key = Data[i];
         hash_search(key);
     }
 
+    return 0;
 }
+
